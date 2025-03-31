@@ -1,3 +1,8 @@
+Technical:
+- Python
+- PySide6
+- PyTest
+
 # Functional
 - Start:
     [ ] There should be a "New" and a "Exit" button at the "Start Screen".
@@ -8,10 +13,13 @@
     [ ] The "Civilisation Generation" screen should consists of a single button "Generate" at the start. When the data of the civilisation is there the labels and list should show.
     [ ] The Civilisation should consists of a name, civilisation_age, event_history, leader, backgrounds, philosophy, understood technology
     [ ] The leader name should be also a button that can be clicked an lead to the "Leader Screen"
+    [ ] The civilisation backgrounds should be randomly chosen from the tables: elements, general_professions, modern_cultures, social_classes.
+    Every civilisation has 1-4 backgrounds with probability 10%: 1, 60%: 2, 20%: 3, 10%: 4
     [ ] A button should lead to the start of the game
 
 - Leader Screen:
     [ ] Shows name, event history, quote of own civilisation, his attributes (willpower, charisma, intelligence, intuition, strengh, constitution, dexterity, manual-dexterity).
+    [ ] The leader name should be generated with a llm api considering the background and philosophies of the civilisation
     [ ] A button should lead back to "Civilisation Generation"
 
 - The Game

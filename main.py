@@ -16,12 +16,16 @@ def main():
     nav_manager = NavigationManager()
     
     # Register screens with dependencies
-    nav_manager.register_screen("start", StartScreen)
+    nav_manager.register_screen("start", lambda: StartScreen())
     nav_manager.register_screen("civilisation_generation", 
                               lambda: CivilisationGenerationScreen(container.table_loader()))
     
     # Start with the start screen
     nav_manager.navigate_to("start")
+    
+    # Connect navigation signals from screens to navigation manager
+    for screen_name, screen in nav_manager._screens.items():
+        screen.navigate.connect(lambda target_screen: nav_manager.navigate_to(target_screen))
     
     sys.exit(app.exec())
 

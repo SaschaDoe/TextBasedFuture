@@ -122,6 +122,12 @@ class ProgressButton(QWidget):
     def setEnabled(self, enabled: bool):
         """Override Qt's setEnabled to use our wrapper method"""
         self.set_enabled(enabled)
+    
+    def setText(self, text: str):
+        """Update the button text"""
+        self.button.setText(text)
+        print(f"ProgressButton.setText called with: {text}")
+        print(f"Button text is now: {self.button.text()}")
         
     def resizeEvent(self, event):
         """Handle resize events to reposition the progress bar"""

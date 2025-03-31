@@ -12,7 +12,8 @@ Technical:
 - Civilisation Generation: 
 
     [ ] The "Civilisation Generation" screen should consists of a single button "Generate" at the start. When the data of the civilisation is there the labels and list should show.
-    [ ] The Generate button should be not clickable in start but also act as a progression bar. When the progression is finished it should be clickable (make this a component). The progression should be the random table data loading in the background when this is finished you shall click the button.
+    [ ] the generate button should be on the bottom of the screen. After click on generate the button should show "generate again".
+    [x] The Generate button should be not clickable in start but also act as a progression bar. When the progression is finished it should be clickable (make this a component). The progression should be the random table data loading in the background when this is finished you shall click the button.
     [ ] The Civilisation should consists of a name, civilisation_age, event_history, leader, backgrounds, philosophy, understood technology
     [ ] The leader name should be also a button that can be clicked an lead to the "Leader Screen"
     [ ] The civilisation backgrounds should be randomly chosen from the tables: elements, general_professions, modern_cultures, social_classes.

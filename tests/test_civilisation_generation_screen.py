@@ -1,9 +1,10 @@
 import pytest
 from unittest.mock import Mock, MagicMock, patch
 from PySide6.QtCore import Qt, QTimer, Signal, QObject
-from PySide6.QtWidgets import QProgressBar, QApplication
+from PySide6.QtWidgets import QProgressBar, QApplication, QPushButton
 from ui.civilisation_generation_screen import CivilisationGenerationScreen
 from data.table_loader import TableLoader
+from ui.components.progress_button import ProgressButton
 
 @pytest.fixture
 def mock_table_loader():
@@ -113,4 +114,30 @@ def test_generate_button_enabled_after_loading(qtbot, window):
     # Additional verification that states are consistent
     assert window.generate_button.is_enabled() == window.generate_button.button.isEnabled()
 
-# Add other tests as needed 
+# Add other tests as needed
+
+@pytest.mark.ui
+@pytest.mark.interaction
+def test_button_text_changes_after_generation(qtbot, window):
+    """Test that the button is replaced with a new 'Generate Again' button after clicking."""
+    # First enable the button by simulating tables loaded
+    mock_table = MockTable()
+    window._on_tables_loaded({"test_table": mock_table})
+    
+    # Wait for the button to be enabled
+    qtbot.waitUntil(lambda: window.generate_button.is_enabled(), timeout=1000)
+    
+    # Store a reference to the original button
+    original_button = window.generate_button
+    
+    # Click the generate button
+    qtbot.mouseClick(window.generate_button.button, Qt.LeftButton)
+    
+    # Process events to allow signal processing
+    qtbot.wait(100)
+    
+    # Verify that the button was replaced with a new QPushButton
+    assert not isinstance(window.generate_button, ProgressButton)
+    assert isinstance(window.generate_button, QPushButton)
+    assert window.generate_button.text() == "Generate Again"
+    assert window.generate_button != original_button 

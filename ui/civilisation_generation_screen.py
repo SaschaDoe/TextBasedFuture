@@ -8,6 +8,7 @@ from typing import Dict
 import os
 from pathlib import Path
 import csv
+from ui.styles.button_styles import get_sci_fi_button_style
 
 class TableLoadingThread(QThread):
     finished = Signal(dict)
@@ -21,8 +22,10 @@ class TableLoadingThread(QThread):
     def run(self):
         # Count the total number of files to be loaded
         data_path = Path(self.data_dir)
+        print(f"Looking for table files in: {data_path.absolute()}")
         table_files = list(data_path.glob("*.csv"))
         total_files = len(table_files)
+        print(f"Found {total_files} table files")
         
         if total_files == 0:
             self.progress.emit(100)  # No files to load
@@ -79,9 +82,11 @@ class CivilisationGenerationScreen(BaseScreen):
         self.result_label.setWordWrap(True)
         self.result_label.hide()
         
-        # Add widgets to layout
-        self.layout.addWidget(self.generate_button)
+        # Add widgets to layout - put result in the middle, button at the bottom
+        self.layout.addStretch(1)  # Add flexible space at the top
         self.layout.addWidget(self.result_label)
+        self.layout.addStretch(1)  # Add flexible space in the middle
+        self.layout.addWidget(self.generate_button, alignment=Qt.AlignCenter)  # Button at the bottom
         
         # Connect signals
         self.generate_button.clicked.connect(self._on_generate)
@@ -102,14 +107,54 @@ class CivilisationGenerationScreen(BaseScreen):
     def _on_tables_loaded(self, tables: Dict[str, Table]):
         """Called when tables are loaded"""
         self.tables = tables
+        print(f"Tables loaded: {len(tables)} tables found")
+        for table_name in tables.keys():
+            print(f"  - {table_name}")
         self.generate_button.set_enabled(True)
     
     def _on_generate(self):
         """Handle generate button click"""
         if not self.tables:
+            print("No tables available, cannot generate!")
             return
         
+        print(f"Generate button clicked, tables available: {len(self.tables)}")
+        
         # Example: Roll on the first table
+        first_table = next(iter(self.tables.values()))
+        result = first_table.roll()
+        
+        print(f"Generated result: {result.value} - {result.text}")
+        
+        # Show result
+        self.result_label.setText(f"Roll: {result.value}\n{result.text}")
+        self.result_label.show()
+        
+        # Replace the custom ProgressButton with a simple QPushButton
+        self.layout.removeWidget(self.generate_button)
+        self.generate_button.deleteLater()
+        
+        # Create a new standard button with the updated text
+        new_button = QPushButton("Generate Again")
+        new_button.setMinimumSize(300, 60)
+        new_button.setMaximumWidth(300)
+        new_button.setStyleSheet(get_sci_fi_button_style())
+        new_button.clicked.connect(self._on_regenerate)
+        
+        # Add to layout at the same position
+        self.layout.addWidget(new_button, alignment=Qt.AlignCenter)
+        
+        # Update reference to new button
+        self.generate_button = new_button
+        
+        print("Replaced with standard QPushButton: Generate Again")
+        
+    def _on_regenerate(self):
+        """Handle subsequent generation button clicks"""
+        if not self.tables:
+            return
+            
+        # Same functionality as _on_generate without changing the button again
         first_table = next(iter(self.tables.values()))
         result = first_table.roll()
         

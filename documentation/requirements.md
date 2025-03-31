@@ -5,8 +5,8 @@ Technical:
 
 # Functional
 - Start:
-    [ ] There should be a "New" and a "Exit" button at the "Start Screen".
-    [ ] New should lead to a "Civilisation Generation" screen.
+    [x] There should be a "New" and a "Exit" button at the "Start Screen".
+    [x] New should lead to a "Civilisation Generation" screen.
     [ ] All random table data should be loaded at start.
 
 - Civilisation Generation:    

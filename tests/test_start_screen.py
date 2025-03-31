@@ -1,11 +1,24 @@
 import pytest
 from PySide6.QtCore import Qt
 from ui.start_screen import StartScreen
+from ui.civilisation_generation_screen import CivilisationGenerationScreen
+from ui.navigation import NavigationManager
 
 @pytest.fixture
-def window(qapp):
+def nav_manager():
+    """Create a navigation manager for testing."""
+    return NavigationManager()
+
+@pytest.fixture
+def window(qapp, nav_manager):
     """Create a fresh window for each test."""
+    # Register all screens
+    nav_manager.register_screen("start", StartScreen)
+    nav_manager.register_screen("civilisation_generation", CivilisationGenerationScreen)
+    
+    # Create and connect start screen
     window = StartScreen()
+    window.navigate.connect(nav_manager.navigate_to)
     yield window
     window.close()
 
@@ -47,3 +60,16 @@ def test_button_clicks(qtbot, window):
     # Verify clicks were registered
     assert exit_clicked, "Exit button click not registered"
     assert new_clicked, "New game button click not registered"
+
+@pytest.mark.ui
+@pytest.mark.interaction
+def test_new_game_navigation(qtbot, window, nav_manager):
+    """Test that clicking New Game shows the Civilisation Generation screen."""
+    # Click the New Game button
+    qtbot.mouseClick(window.new_button, Qt.LeftButton)
+    
+    # Verify the start screen is hidden
+    assert not window.isVisible()
+    
+    # Verify the current screen is civilisation generation
+    assert nav_manager.get_current_screen() == "civilisation_generation"
